@@ -1,0 +1,1 @@
+Poné acá las fotos de los trabajos y agregá img:"img/trabajos/nombre.jpg" a cada trabajo en js/app.js.
