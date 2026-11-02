@@ -51,15 +51,18 @@ const ORIGINAL = {
   "resenas": [
     {
       "texto": "Excelente colorista. Voy hace 10 años y cada día se supera. Te escucha, te interpreta y te cuida el cabello.",
-      "autor": "Romina Souse"
+      "autor": "Romina Souse",
+      "cuando": "Hace 5 meses"
     },
     {
       "texto": "La mejor colorista por lejos. Entiende a la perfección lo que querés y te asesora con total honestidad.",
-      "autor": "Donatella Brizzola"
+      "autor": "Donatella Brizzola",
+      "cuando": "Hace 2 semanas"
     },
     {
       "texto": "Me encantó conocer a Clari, y el color final de mi pelito habla por sí solo.",
-      "autor": "Lisseth Toapanta"
+      "autor": "Lisseth Toapanta",
+      "cuando": "Hace 2 semanas"
     }
   ],
   "trabajos": {
@@ -129,9 +132,6 @@ const SECCIONES = [
         { k: "sobre.parrafo1", l: "Párrafo 1", max: 500, area: true },
         { k: "sobre.parrafo2", l: "Párrafo 2", max: 500, area: true },
       ]},
-      { titulo: "Títulos de reseñas", campos: [
-        { fila: [ { k: "sobre.titulo_resenas", l: "Título", max: 30 }, { k: "sobre.etiqueta_resenas", l: "Etiqueta", max: 40 } ] },
-      ]},
     ] },
   { id: "servicios", nombre: "Servicios", pagina: "index.html",
     intro: "Se muestran en Inicio y en Sobre mí. Las columnas se acomodan solas según cuántos haya.",
@@ -139,10 +139,15 @@ const SECCIONES = [
       campos: [ { k: "titulo", l: "Nombre", max: 24 }, { k: "texto", l: "Descripción", max: 120, area: true } ],
       nuevo: () => ({ titulo: "", texto: "" }) } },
   { id: "resenas", nombre: "Reseñas", pagina: "sobre-mi.html",
-    intro: "La primera reseña también aparece en Inicio.",
-    lista: { k: "resenas", nombre: "Reseña", min: 1, max: 9,
-      campos: [ { k: "texto", l: "Reseña", max: 300, area: true }, { k: "autor", l: "Nombre de la clienta", max: 40 } ],
-      nuevo: () => ({ texto: "", autor: "" }) } },
+    intro: "Se muestran como en Google Maps, en Inicio y en Sobre mí. Si una reseña es larga, aparece “Leer más”. Podés copiarlas tal cual de Google.",
+    tarjetas: [
+      { titulo: "Título del bloque", campos: [
+        { fila: [ { k: "sobre.titulo_resenas", l: "Título", max: 30 }, { k: "sobre.etiqueta_resenas", l: "Etiqueta chica", max: 40 } ] },
+      ]},
+    ],
+    lista: { k: "resenas", nombre: "Reseña", min: 1, max: 12, titulo: "Reseñas",
+      campos: [ { k: "texto", l: "Reseña", max: 600, area: true }, { k: "autor", l: "Nombre de la clienta", max: 40 }, { k: "cuando", l: "Cuándo (opcional)", max: 24, ayuda: "Ej: Hace 2 semanas" } ],
+      nuevo: () => ({ texto: "", autor: "", cuando: "" }) } },
   { id: "trabajos", nombre: "Trabajos", pagina: "trabajos.html", trabajos: true,
     tarjetas: [
       { titulo: "Encabezado de la página", campos: [
@@ -491,7 +496,7 @@ const vistaPrevia = (() => {
         const clave = id.slice(2).replace(/-/g, ".");
         sel = clave === "contacto.whatsapp" ? "[data-wa]:not(.wa-top)" : clave === "contacto.instagram" ? "[data-ig]" : `[data-c="${clave}"]`;
       } else if (id.startsWith("l-servicios")) sel = '[data-list="servicios"]';
-      else if (id.startsWith("l-resenas")) sel = '[data-list="resenas"]';
+      else if (id.startsWith("l-resenas")) { const n = +id.split("-")[2]; sel = `[data-list="resenas"] .rv-card:nth-child(${n + 1})`; }
       else if (id.startsWith("l-contacto-opciones")) sel = '[data-list="opciones"]';
       else if (id.startsWith("t-")) sel = "#grid";
       else if (e.target.dataset?.foto) sel = `[data-foto="${e.target.dataset.foto}"]`;

@@ -113,6 +113,72 @@ if (grid) {
   });
 }
 
+/* ---------- reseñas estilo Google Maps ---------- */
+const TONOS_AV = ["#563823", "#8c6239", "#c49a63", "#3e2a1f", "#a77d4c"];
+function tarjetaResena(r, i) {
+  const ini = String(r.autor || "?").trim().split(/\s+/).slice(0, 2).map(p => p[0] || "").join("").toUpperCase() || "?";
+  const cuando = lleno(r.cuando) ? `${esc(r.cuando)} · Google` : "Google";
+  return `<article class="rv-card">
+    <div class="rv-head"><span class="rv-av" style="background:${TONOS_AV[i % TONOS_AV.length]}">${esc(ini)}</span><span class="rv-who"><b>${esc(r.autor || "Clienta")}</b><small>${cuando}</small></span></div>
+    <span class="stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span>
+    <p class="rv-txt">${esc(r.texto)}</p>
+  </article>`;
+}
+
+function prepararResenas() {
+  document.querySelectorAll("[data-resenas]").forEach(bloque => {
+    const track = bloque.querySelector(".rv-track");
+    const prev = bloque.querySelector(".rv-prev"), next = bloque.querySelector(".rv-next");
+    if (!track) return;
+    const tarjetas = () => [...track.querySelectorAll(".rv-card")];
+    const cards = tarjetas();
+
+    // "Leer más" solo en las reseñas que no entran completas
+    cards.forEach(c => {
+      const txt = c.querySelector(".rv-txt");
+      c.querySelector(".rv-more")?.remove();
+      c.classList.remove("abierta");
+      if (txt.scrollHeight > txt.clientHeight + 2) {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "rv-more"; b.textContent = "Leer más";
+        b.onclick = () => { const a = c.classList.toggle("abierta"); b.textContent = a ? "Leer menos" : "Leer más"; };
+        c.appendChild(b);
+      }
+    });
+
+    // puntitos
+    let dots = bloque.querySelector(".rv-dots");
+    if (!dots) { dots = document.createElement("div"); dots.className = "rv-dots"; dots.setAttribute("aria-hidden", "true"); track.after(dots); }
+    const paso = () => { const c = tarjetas(); return (c[1] ? c[1].offsetLeft - c[0].offsetLeft : track.clientWidth) || 1; };
+    const visibles = () => Math.max(1, Math.round(track.clientWidth / paso()));
+    const paginas = () => Math.max(1, tarjetas().length - visibles() + 1);
+
+    const actualizar = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      if (prev) prev.disabled = track.scrollLeft <= 2;
+      if (next) next.disabled = track.scrollLeft >= max;
+      const n = paginas(), i = Math.min(n - 1, Math.round(track.scrollLeft / paso()));
+      if (dots.children.length !== n) dots.innerHTML = n > 1 ? "<i></i>".repeat(n) : "";
+      [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+      bloque.querySelector(".rv-nav").hidden = n <= 1;
+    };
+    if (!track.dataset.listo) {
+      track.dataset.listo = "1";
+      prev && (prev.onclick = () => track.scrollBy({ left: -paso(), behavior: "smooth" }));
+      next && (next.onclick = () => track.scrollBy({ left: paso(), behavior: "smooth" }));
+      track.addEventListener("scroll", () => requestAnimationFrame(actualizar), { passive: true });
+      track.addEventListener("keydown", e => {
+        if (e.key === "ArrowRight") { e.preventDefault(); track.scrollBy({ left: paso(), behavior: "smooth" }); }
+        if (e.key === "ArrowLeft") { e.preventDefault(); track.scrollBy({ left: -paso(), behavior: "smooth" }); }
+      });
+      window.addEventListener("resize", actualizar);
+      window.addEventListener("load", actualizar);
+    }
+    actualizar();
+  });
+}
+prepararResenas();
+
 /* ---------- aplicar el contenido del panel ---------- */
 function aplicarContenido(d) {
   if (!d) return;
@@ -129,16 +195,11 @@ function aplicarContenido(d) {
   });
 
   const resenas = (d.resenas || []).filter(r => lleno(r.texto));
-  if (resenas.length) {
-    document.querySelectorAll('[data-list="resenas"]').forEach(el => {
-      el.innerHTML = resenas.map(r => `<figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>${esc(r.texto)}</blockquote><figcaption><b>${esc(r.autor)}</b> · Google</figcaption></figure>`).join("");
-    });
-    const q = document.querySelector("[data-quote]");
-    if (q) {
-      q.querySelector("blockquote").textContent = resenas[0].texto;
-      q.querySelector("figcaption").innerHTML = `${esc(resenas[0].autor)} · reseña en Google · <a href="sobre-mi.html">ver más reseñas</a>`;
-    }
-  }
+  if (resenas.length) document.querySelectorAll('[data-list="resenas"]').forEach(el => {
+    el.innerHTML = resenas.map(tarjetaResena).join("");
+    el.scrollLeft = 0;
+  });
+  if (resenas.length) prepararResenas();
 
   const opciones = (d.contacto?.opciones || []).filter(lleno);
   if (opciones.length) document.querySelectorAll('[data-list="opciones"]').forEach(el => {

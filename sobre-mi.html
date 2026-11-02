@@ -65,13 +65,30 @@
 
 <section class="sec">
   <div class="wrap">
-    <div class="sec-head reveal"><h2 data-c="sobre.titulo_resenas">Reseñas</h2><span class="label" data-c="sobre.etiqueta_resenas">Lo que dicen mis clientas</span></div>
-    <div class="reviews reveal" data-list="resenas">
-      <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>Excelente colorista. Voy hace 10 años y cada día se supera. Te escucha, te interpreta y te cuida el cabello.</blockquote><figcaption><b>Romina Souse</b> · Google</figcaption></figure>
-      <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>La mejor colorista por lejos. Entiende a la perfección lo que querés y te asesora con total honestidad.</blockquote><figcaption><b>Donatella Brizzola</b> · Google</figcaption></figure>
-      <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>Me encantó conocer a Clari, y el color final de mi pelito habla por sí solo.</blockquote><figcaption><b>Lisseth Toapanta</b> · Google</figcaption></figure>
+    <div class="rv-block reveal" data-resenas>
+      <div class="rv-top">
+        <div><p class="label" data-c="sobre.etiqueta_resenas">Lo que dicen mis clientas</p><h2 data-c="sobre.titulo_resenas">Reseñas</h2></div>
+        <div class="rv-nav"><button type="button" class="rv-prev" aria-label="Reseña anterior">←</button><button type="button" class="rv-next" aria-label="Reseña siguiente">→</button></div>
+      </div>
+      <div class="rv-track" data-list="resenas" tabindex="0" aria-label="Reseñas de clientas">
+        <article class="rv-card">
+          <div class="rv-head"><span class="rv-av" style="background:#563823">RS</span><span class="rv-who"><b>Romina Souse</b><small>Hace 5 meses · Google</small></span></div>
+          <span class="stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span>
+          <p class="rv-txt">Excelente colorista. Voy hace 10 años y cada día se supera. Te escucha, te interpreta y te cuida el cabello.</p>
+        </article>
+        <article class="rv-card">
+          <div class="rv-head"><span class="rv-av" style="background:#8c6239">DB</span><span class="rv-who"><b>Donatella Brizzola</b><small>Hace 2 semanas · Google</small></span></div>
+          <span class="stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span>
+          <p class="rv-txt">La mejor colorista por lejos. Entiende a la perfección lo que querés y te asesora con total honestidad.</p>
+        </article>
+        <article class="rv-card">
+          <div class="rv-head"><span class="rv-av" style="background:#c49a63">LT</span><span class="rv-who"><b>Lisseth Toapanta</b><small>Hace 2 semanas · Google</small></span></div>
+          <span class="stars" role="img" aria-label="5 de 5 estrellas">★★★★★</span>
+          <p class="rv-txt">Me encantó conocer a Clari, y el color final de mi pelito habla por sí solo.</p>
+        </article>
+      </div>
+      <a class="rv-google" href="https://www.google.com/maps/search/Peluquer%C3%ADa+ClariColor" target="_blank" rel="noopener"><span class="rv-pin" aria-hidden="true">★ Google</span>Ver todas las reseñas en Google Maps <span aria-hidden="true">↗</span></a>
     </div>
-    <a class="rv-link" href="https://www.google.com/maps/search/Peluquer%C3%ADa+ClariColor" target="_blank" rel="noopener">Ver todas las reseñas en Google →</a>
   </div>
 </section>
 
