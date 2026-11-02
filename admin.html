@@ -14,25 +14,29 @@
 
 <!-- ===== Ingreso ===== -->
 <section class="login" id="v-login" hidden>
+  <div class="login-art" aria-hidden="true">
+    <div class="tones"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
   <form class="login-card" id="f-login">
-    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
-    <h1>Panel de la web</h1>
-    <p class="muted">Entrá con tu mail y contraseña para editar textos, fotos y trabajos.</p>
+    <img class="login-logo" src="img/logo.png" alt="Clari Color" width="140" height="142">
+    <p class="kicker">Panel de la web</p>
+    <h1>Hola, Clari</h1>
     <label for="l-email">Mail<input id="l-email" type="email" autocomplete="username" required></label>
     <label for="l-pass">Contraseña<input id="l-pass" type="password" autocomplete="current-password" required></label>
-    <button class="btn solid" type="submit" id="l-btn">Entrar</button>
+    <button class="btn solid wide" type="submit" id="l-btn">Entrar</button>
     <button class="link" type="button" id="l-olvide">Me olvidé la contraseña</button>
     <p class="msg" id="l-msg" role="status"></p>
   </form>
 </section>
 
-<!-- ===== Nueva contraseña (al volver del mail de recuperación) ===== -->
+<!-- ===== Nueva contraseña ===== -->
 <section class="login" id="v-reset" hidden>
   <form class="login-card" id="f-reset">
-    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
+    <img class="login-logo" src="img/logo.png" alt="Clari Color" width="140" height="142">
+    <p class="kicker">Panel de la web</p>
     <h1>Nueva contraseña</h1>
     <label for="r-pass">Contraseña nueva<input id="r-pass" type="password" autocomplete="new-password" minlength="8" required></label>
-    <button class="btn solid" type="submit">Guardar contraseña</button>
+    <button class="btn solid wide" type="submit">Guardar contraseña</button>
     <p class="msg" id="r-msg" role="status"></p>
   </form>
 </section>
@@ -40,41 +44,58 @@
 <!-- ===== Sin configurar ===== -->
 <section class="login" id="v-config" hidden>
   <div class="login-card">
-    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
+    <img class="login-logo" src="img/logo.png" alt="Clari Color" width="140" height="142">
     <h1>Falta conectar la base</h1>
-    <p class="muted">Completá la dirección y la clave de Supabase en <code>js/config.js</code> para usar el panel.</p>
+    <p class="muted">Completá la dirección y la clave de Supabase en <code>js/config.js</code>.</p>
   </div>
 </section>
 
 <!-- ===== Panel ===== -->
 <div class="app" id="v-panel" hidden>
-  <header class="top">
-    <a class="top-brand" href="index.html" target="_blank" rel="noopener"><img src="img/logo.png" alt="" width="44" height="45"><span>Panel</span></a>
-    <div class="top-actions">
-      <a class="btn small" href="index.html" target="_blank" rel="noopener">Ver la web ↗</a>
-      <button class="btn small ghost" type="button" id="b-salir">Salir</button>
+  <aside class="side">
+    <a class="side-brand" href="index.html" target="_blank" rel="noopener" aria-label="Ver la web"><img src="img/logo.png" alt="" width="92" height="93"></a>
+    <nav class="tabs" id="tabs" aria-label="Secciones del panel"></nav>
+    <div class="side-foot">
+      <a class="side-link" href="index.html" target="_blank" rel="noopener">Ver la web ↗</a>
+      <button class="side-link" type="button" id="b-salir">Salir</button>
     </div>
-  </header>
-
-  <nav class="tabs" id="tabs" aria-label="Secciones del panel"></nav>
+  </aside>
 
   <main class="main" id="main" tabindex="-1"></main>
 
-  <div class="savebar" id="savebar" data-estado="limpio">
-    <span class="save-state" id="save-state" role="status">Todo guardado</span>
+  <section class="preview" id="preview" aria-label="Vista previa">
+    <div class="pv-bar">
+      <div class="pv-title"><span class="live" aria-hidden="true"></span>Vista previa <small id="pv-pagina"></small></div>
+      <div class="seg" role="group" aria-label="Tamaño de la vista previa">
+        <button type="button" data-dev="cel" aria-pressed="true">Celular</button>
+        <button type="button" data-dev="pc" aria-pressed="false">PC</button>
+      </div>
+      <button class="pv-close" type="button" id="pv-cerrar" aria-label="Cerrar vista previa">✕</button>
+    </div>
+    <div class="pv-stage" id="pv-stage">
+      <div class="device" id="device">
+        <iframe id="pv-frame" title="Vista previa de la web" loading="lazy"></iframe>
+      </div>
+    </div>
+    <p class="pv-note">Así se va a ver cuando guardes. Todavía no está publicado.</p>
+  </section>
+
+  <button class="pv-open" type="button" id="pv-abrir"><span class="live" aria-hidden="true"></span>Ver cómo queda</button>
+
+  <div class="savebar" id="savebar" data-estado="limpio" aria-live="polite">
+    <span class="save-state" id="save-state">Todo guardado</span>
     <div class="save-actions">
       <button class="btn small ghost" type="button" id="b-descartar">Descartar</button>
-      <button class="btn solid" type="button" id="b-guardar">Guardar cambios</button>
+      <button class="btn solid" type="button" id="b-guardar"><span class="spin" aria-hidden="true"></span><span class="lbl">Guardar cambios</span></button>
     </div>
   </div>
 </div>
 
-<!-- confirmación propia (sin alert/confirm del navegador) -->
 <dialog id="dlg" class="dlg">
   <p id="dlg-t"></p>
   <div class="dlg-actions">
-    <button class="btn small ghost" type="button" value="no" id="dlg-no">Cancelar</button>
-    <button class="btn small danger" type="button" value="si" id="dlg-si">Sí, borrar</button>
+    <button class="btn small ghost" type="button" id="dlg-no">Cancelar</button>
+    <button class="btn small danger" type="button" id="dlg-si">Sí, borrar</button>
   </div>
 </dialog>
 

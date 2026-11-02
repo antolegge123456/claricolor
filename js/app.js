@@ -118,8 +118,9 @@ function aplicarContenido(d) {
   if (!d) return;
 
   document.querySelectorAll("[data-c]").forEach(el => {
+    if (!("orig" in el.dataset)) el.dataset.orig = el.textContent;
     const v = leer(d, el.dataset.c);
-    if (lleno(v)) el.textContent = v.trim();
+    el.textContent = lleno(v) ? v.trim() : el.dataset.orig;
   });
 
   const servicios = (d.servicios || []).filter(s => lleno(s.titulo));
@@ -201,10 +202,51 @@ async function desdeBase() {
   } catch (e) { /* sin conexión: queda lo que ya se ve */ }
 }
 
-desdeCache();
-pintarTeaser();
-renderGaleria();
-desdeBase();
+/* ---------- vista previa del panel ----------
+   Cuando el panel abre la web adentro (con ?vista-previa), la página no lee la base:
+   muestra lo que Anto está escribiendo, antes de guardar. */
+const VISTA_PREVIA = new URLSearchParams(location.search).has("vista-previa") && window.parent !== window;
+
+if (VISTA_PREVIA) {
+  const st = document.createElement("style");
+  st.textContent = `.pv-foco{outline:2px solid #3FC2BB;outline-offset:6px;border-radius:6px;animation:pvFoco 1.4s ease-out}
+    @keyframes pvFoco{0%{outline-color:rgba(63,194,187,0);outline-offset:18px}40%{outline-color:#3FC2BB;outline-offset:6px}}
+    .pv-cambio{animation:pvCambio .9s ease-out}
+    @keyframes pvCambio{0%{background:rgba(63,194,187,.35)}100%{background:transparent}}
+    a{pointer-events:none}`;
+  document.head.appendChild(st);
+  pintarTeaser();
+  renderGaleria();
+  let foco = null;
+  window.addEventListener("message", e => {
+    if (e.source !== window.parent) return;
+    if (location.protocol !== "file:" && e.origin !== location.origin) return;
+    const m = e.data || {};
+    if (m.tipo === "clari-contenido") {
+      const antes = new Map([...document.querySelectorAll("[data-c]")].map(el => [el, el.textContent]));
+      aplicarContenido(m.contenido);
+      TRABAJOS = MUESTRA;
+      aplicarTrabajos((m.trabajos || []).filter(t => t.visible && t.foto && (t.titulo || "").trim()));
+      pintarTeaser();
+      renderGaleria();
+      antes.forEach((txt, el) => { if (el.textContent !== txt) { el.classList.remove("pv-cambio"); void el.offsetWidth; el.classList.add("pv-cambio"); } });
+    }
+    if (m.tipo === "clari-foco") {
+      if (foco) foco.classList.remove("pv-foco");
+      foco = m.selector ? document.querySelector(m.selector) : null;
+      if (foco) {
+        foco.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block: "center" });
+        void foco.offsetWidth; foco.classList.add("pv-foco");
+      }
+    }
+  });
+  window.parent.postMessage({ tipo: "clari-lista" }, location.protocol === "file:" ? "*" : location.origin);
+} else {
+  desdeCache();
+  pintarTeaser();
+  renderGaleria();
+  desdeBase();
+}
 
 /* ---------- formulario de contacto → WhatsApp ---------- */
 const form = document.getElementById("f");

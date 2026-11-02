@@ -91,6 +91,15 @@ const ORIGINAL = {
 /* ---------- qué se puede editar en cada sección ---------- */
 const CATEGORIAS = [["color", "Color"], ["corte", "Cortes"], ["peinado", "Peinados"], ["trans", "Transformaciones"]];
 
+const ICONOS = {
+  inicio: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  sobre: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  servicios: '<circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="M8.5 8.5 20 18M8.5 15.5 20 6"/>',
+  resenas: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+  trabajos: '<rect x="3" y="3" width="7.5" height="9" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5.5" rx="1.5"/><rect x="3" y="15" width="7.5" height="6" rx="1.5"/><rect x="13.5" y="11.5" width="7.5" height="9.5" rx="1.5"/>',
+  contacto: '<path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/>',
+};
+
 const SECCIONES = [
   { id: "inicio", nombre: "Inicio", pagina: "index.html",
     intro: "La página principal. El nombre “Clari Color” y la carta de tonos son fijos.",
@@ -191,7 +200,7 @@ function haySucio() { return JSON.stringify(datos) !== JSON.stringify(guardado) 
 function marcar() {
   const sucio = haySucio();
   const bar = $("#savebar");
-  if (bar.dataset.estado !== "guardando") {
+  if (bar.dataset.estado !== "guardando" && !(bar.dataset.estado === "ok" && !sucio)) {
     bar.dataset.estado = sucio ? "sucio" : "limpio";
     $("#save-state").textContent = sucio ? "Cambios sin guardar" : "Todo guardado";
   }
@@ -201,6 +210,7 @@ function marcar() {
     const b = $(`#tab-${s.id}`); if (!b) return;
     b.classList.toggle("sucio", seccionSucia(s));
   });
+  vistaPrevia.enviar();
 }
 function seccionSucia(s) {
   const claves = [];
@@ -214,8 +224,13 @@ window.addEventListener("beforeunload", e => { if (datos && haySucio()) { e.prev
 /* ---------- dibujar ---------- */
 function pintarTabs() {
   $("#tabs").innerHTML = SECCIONES.map(s =>
-    `<button type="button" id="tab-${s.id}" aria-current="${s.id === seccion}"><span>${s.nombre}</span><i class="dot" aria-hidden="true"></i></button>`).join("");
-  SECCIONES.forEach(s => $(`#tab-${s.id}`).onclick = () => { seccion = s.id; pintarTabs(); pintar(); $("#main").focus({ preventScroll: true }); window.scrollTo(0, 0); });
+    `<button type="button" id="tab-${s.id}" aria-current="${s.id === seccion}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONOS[s.id]}</svg><span>${s.nombre}</span><i class="dot" aria-hidden="true"></i></button>`).join("");
+  SECCIONES.forEach(s => $(`#tab-${s.id}`).onclick = () => {
+    if (seccion === s.id) return;
+    seccion = s.id; pintar.animar = true; pintarTabs(); pintar(); vistaPrevia.pagina();
+    $("#main").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: "smooth" });
+    $(`#tab-${s.id}`).scrollIntoView({ block: "nearest", inline: "center" });
+  });
   marcar();
 }
 
@@ -225,7 +240,7 @@ function campoHTML(c, valor, id) {
     ? `<textarea id="${id}" maxlength="${c.max}" rows="${c.max > 200 ? 5 : 3}">${esc(v)}</textarea>`
     : `<input id="${id}" type="${c.tipo || "text"}" maxlength="${c.max}" value="${esc(v)}"${c.tipo === "tel" ? ' inputmode="numeric"' : ""}>`;
   return `<div class="field" data-campo="${id}">
-    <div class="field-top"><label for="${id}">${esc(c.l)}</label><span class="count" aria-live="polite">${v.length}/${c.max}</span></div>
+    <div class="field-top"><label for="${id}">${esc(c.l)}<span class="chip">Editado</span></label><span class="count"><span class="n">${v.length}/${c.max}</span><span class="meter" aria-hidden="true"><b style="--p:${Math.min(100, v.length / c.max * 100)}%"></b></span></span></div>
     ${ctrl}
     ${c.ayuda ? `<p class="help">${esc(c.ayuda)}</p>` : ""}
     <p class="help bad" hidden></p>
@@ -239,7 +254,8 @@ function conectarCampo(id, c, obtener, poner) {
     let v = el.value;
     if (c.tipo === "tel") { v = v.replace(/\D/g, ""); if (el.value !== v) el.value = v; }
     poner(v);
-    cuenta.textContent = `${v.length}/${c.max}`;
+    cuenta.querySelector(".n").textContent = `${v.length}/${c.max}`;
+    cuenta.querySelector(".meter b").style.setProperty("--p", Math.min(100, v.length / c.max * 100) + "%");
     cuenta.classList.toggle("near", v.length >= c.max * 0.9);
     const msg = c.validar && v ? c.validar(v) : true;
     error.hidden = msg === true; error.textContent = msg === true ? "" : msg;
@@ -307,16 +323,17 @@ function conectarLista(L) {
   const add = card.querySelector("[data-agregar]");
   if (add) add.onclick = () => {
     arr().push(L.nuevo()); pintar(); marcar();
+    document.querySelector(`[data-lista="${L.k}"] .item:last-child`)?.classList.add("nuevo");
     const nuevos = document.querySelectorAll(`[data-lista="${L.k}"] .item`);
     nuevos[nuevos.length - 1]?.querySelector("input,textarea")?.focus();
   };
 }
 
 function seccionTrabajos() {
-  const tarjetas = trabajos.map((t, i) => `<article class="work">
+  const tarjetas = trabajos.map((t, i) => `<article class="work${t.visible ? "" : " oculto"}${t.nuevo && !t.foto ? " nuevo" : ""}" style="--i:${i}">
       <div class="pic" style="${t.foto ? `background-image:url('${encodeURI(t.foto)}')` : ""}">
         ${t.foto ? "" : "Sin foto"}
-        ${t.visible ? "" : `<span class="hidden-badge">Oculto</span>`}
+        ${t.visible ? "" : `<span class="badge">Oculto</span>`}
         <span class="btn small file">${t.subiendo ? "Subiendo…" : t.foto ? "Cambiar foto" : "Subir foto"}<input type="file" accept="image/*" data-tfoto="${i}" aria-label="Foto del trabajo ${i + 1}" ${t.subiendo ? "disabled" : ""}></span>
       </div>
       <div class="body">
@@ -339,7 +356,7 @@ function seccionTrabajos() {
     <div class="field-top"><h2>Trabajos</h2><span class="count">${trabajos.length} cargados</span></div>
     <p class="muted">El orden de acá es el orden de la web. Los 3 primeros aparecen en Inicio.</p>
     <button class="btn solid add" type="button" id="t-nuevo">+ Agregar trabajo</button>
-    ${trabajos.length ? `<div class="works">${tarjetas}</div>` : `<div class="empty">Todavía no hay trabajos. Mientras tanto la web muestra los de muestra.</div>`}
+    ${trabajos.length ? `<div class="works">${tarjetas}</div>` : `<div class="empty">Todavía no hay trabajos. Tocá “Agregar trabajo” para subir el primero.</div>`}
   </section>`;
 }
 
@@ -377,12 +394,23 @@ function conectarTrabajos() {
 
 function pintar() {
   const s = SECCIONES.find(x => x.id === seccion);
-  let html = `<div class="page-title"><h1>${s.nombre}</h1><a href="${s.pagina}" target="_blank" rel="noopener">Ver esta página ↗</a></div>`;
-  if (s.intro) html += `<p class="intro">${esc(s.intro)}</p>`;
+  let html = `<header class="head"><div class="head-row"><p class="kicker">Editando</p>
+      <a href="${s.pagina}" target="_blank" rel="noopener">Abrir la página ↗</a></div>
+    <h1>${s.nombre}</h1><span class="tone-line" aria-hidden="true"></span>
+    ${s.intro ? `<p>${esc(s.intro)}</p>` : ""}
+    <button class="link solo-cel" type="button" id="b-salir-cel">Salir del panel</button></header>`;
   (s.tarjetas || []).forEach(t => html += t.foto ? tarjetaFoto(t) : tarjetaCampos(t));
   if (s.trabajos) html += seccionTrabajos();
   if (s.lista) html += tarjetaLista(s.lista);
-  $("#main").innerHTML = html;
+  const main = $("#main");
+  main.innerHTML = html;
+  main.querySelectorAll(":scope > .card").forEach((c, i) => c.style.setProperty("--i", i));
+  if (pintar.animar) {
+    main.classList.remove("entrando"); void main.offsetWidth; main.classList.add("entrando");
+    clearTimeout(pintar.t); pintar.t = setTimeout(() => main.classList.remove("entrando"), 900);
+    pintar.animar = false;
+  }
+  $("#b-salir-cel").onclick = () => $("#b-salir").click();
 
   (s.tarjetas || []).forEach(t => (t.campos || []).forEach(c => (c.fila || [c]).forEach(x =>
     conectarCampo("c-" + x.k.replace(/\./g, "-"), x, o => leer(o, x.k) ?? "", v => escribir(datos, x.k, v)))));
@@ -399,6 +427,80 @@ function pintar() {
   });
   document.querySelectorAll("[data-quitar]").forEach(b => b.onclick = () => { escribir(datos, b.dataset.quitar, ""); pintar(); marcar(); });
 }
+
+/* ---------- vista previa en vivo ----------
+   Abre la página real dentro del panel y le manda lo que se está escribiendo, sin guardar. */
+const vistaPrevia = (() => {
+  let lista = false, t = null, dev = "cel", actual = "";
+  const DEV = { cel: { w: 390, h: 844 }, pc: { w: 1280, h: 860 } };
+  const NOMBRES = { "index.html": "Inicio", "sobre-mi.html": "Sobre mí", "trabajos.html": "Trabajos", "contacto.html": "Contacto" };
+  const frame = () => $("#pv-frame");
+  // en un servidor solo le habla a la misma web; abierto como archivo local no hay origen fijo
+  const destino = () => location.protocol === "file:" ? "*" : location.origin;
+
+  function medir() {
+    const stage = $("#pv-stage"), device = $("#device"), f = frame();
+    if (!stage || !stage.clientWidth) return;
+    const d = DEV[dev], pad = dev === "cel" ? 20 : 12, top = dev === "cel" ? 0 : 20;
+    const k = Math.min((stage.clientWidth - 32 - pad) / d.w, (stage.clientHeight - 32 - pad - top) / d.h, 1);
+    f.style.width = d.w + "px"; f.style.height = d.h + "px"; f.style.transform = `scale(${k})`;
+    device.style.width = d.w * k + pad + "px"; device.style.height = d.h * k + pad + top + "px";
+    device.className = "device " + dev + (lista ? "" : " cargando");
+  }
+
+  function pagina() {
+    const s = SECCIONES.find(x => x.id === seccion);
+    if (!s || actual === s.pagina) return;
+    actual = s.pagina; lista = false;
+    $("#pv-pagina").textContent = "· " + (NOMBRES[s.pagina] || "");
+    medir();
+    frame().src = s.pagina + "?vista-previa=1";
+  }
+
+  function mandarAhora() {
+    if (!lista || !datos || !frame().contentWindow) return;
+    frame().contentWindow.postMessage({ tipo: "clari-contenido", contenido: clonar(datos), trabajos: clonar(trabajos.filter(x => !x.subiendo)) }, destino());
+  }
+  function enviar() { clearTimeout(t); t = setTimeout(mandarAhora, 120); }
+
+  function foco(selector) {
+    if (!lista || !frame().contentWindow) return;
+    frame().contentWindow.postMessage({ tipo: "clari-foco", selector }, destino());
+  }
+
+  function iniciar() {
+    window.addEventListener("message", e => {
+      if (e.source !== frame().contentWindow) return;
+      if (e.data?.tipo === "clari-lista") { lista = true; medir(); mandarAhora(); }
+    });
+    document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+      dev = b.dataset.dev;
+      document.querySelectorAll(".seg button").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+      medir();
+    });
+    new ResizeObserver(medir).observe($("#pv-stage"));
+    $("#pv-abrir").onclick = () => { $("#preview").classList.add("abierta"); requestAnimationFrame(medir); };
+    $("#pv-cerrar").onclick = () => $("#preview").classList.remove("abierta");
+    document.addEventListener("keydown", e => { if (e.key === "Escape") $("#preview").classList.remove("abierta"); });
+
+    // al tocar un campo, la vista previa va a ese lugar de la página
+    $("#main").addEventListener("focusin", e => {
+      const id = e.target.id || "";
+      let sel = null;
+      if (id.startsWith("c-")) {
+        const clave = id.slice(2).replace(/-/g, ".");
+        sel = clave === "contacto.whatsapp" ? "[data-wa]:not(.wa-top)" : clave === "contacto.instagram" ? "[data-ig]" : `[data-c="${clave}"]`;
+      } else if (id.startsWith("l-servicios")) sel = '[data-list="servicios"]';
+      else if (id.startsWith("l-resenas")) sel = '[data-list="resenas"]';
+      else if (id.startsWith("l-contacto-opciones")) sel = '[data-list="opciones"]';
+      else if (id.startsWith("t-")) sel = "#grid";
+      else if (e.target.dataset?.foto) sel = `[data-foto="${e.target.dataset.foto}"]`;
+      if (sel) foco(sel);
+    });
+    pagina();
+  }
+  return { iniciar, enviar, pagina, medir };
+})();
 
 /* ---------- fotos: se achican en el navegador antes de subir ---------- */
 async function achicar(file, maxLado = 1600) {
@@ -463,9 +565,11 @@ async function guardar() {
     datos = limpio; guardado = clonar(limpio);
     trabajos.forEach(t => delete t.nuevo);
     trabajosGuardados = clonar(trabajos);
-    bar.dataset.estado = "limpio";
+    bar.dataset.estado = "ok";
+    $("#save-state").textContent = "Guardado. La web ya está actualizada";
     pintar(); marcar();
-    toast("Guardado. La web ya muestra los cambios.");
+    clearTimeout(guardar.t);
+    guardar.t = setTimeout(() => { if (bar.dataset.estado === "ok") { bar.dataset.estado = "limpio"; marcar(); } }, 2200);
   } catch (e) {
     console.error(e);
     bar.dataset.estado = "error";
@@ -503,7 +607,9 @@ async function cargarPanel() {
   guardado = clonar(datos);
   trabajos = (t.data || []).map(x => ({ ...x, titulo: x.titulo || "", detalle: x.detalle || "", foto: x.foto || "" }));
   trabajosGuardados = clonar(trabajos);
+  pintar.animar = true;
   pintarTabs(); pintar(); marcar();
+  if (!cargarPanel.listo) { vistaPrevia.iniciar(); cargarPanel.listo = true; } else vistaPrevia.pagina();
 }
 
 async function entrar(session) {
