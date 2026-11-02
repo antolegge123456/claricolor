@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panel | Clari Color</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ===== Ingreso ===== -->
+<section class="login" id="v-login" hidden>
+  <form class="login-card" id="f-login">
+    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
+    <h1>Panel de la web</h1>
+    <p class="muted">Entrá con tu mail y contraseña para editar textos, fotos y trabajos.</p>
+    <label for="l-email">Mail<input id="l-email" type="email" autocomplete="username" required></label>
+    <label for="l-pass">Contraseña<input id="l-pass" type="password" autocomplete="current-password" required></label>
+    <button class="btn solid" type="submit" id="l-btn">Entrar</button>
+    <button class="link" type="button" id="l-olvide">Me olvidé la contraseña</button>
+    <p class="msg" id="l-msg" role="status"></p>
+  </form>
+</section>
+
+<!-- ===== Nueva contraseña (al volver del mail de recuperación) ===== -->
+<section class="login" id="v-reset" hidden>
+  <form class="login-card" id="f-reset">
+    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
+    <h1>Nueva contraseña</h1>
+    <label for="r-pass">Contraseña nueva<input id="r-pass" type="password" autocomplete="new-password" minlength="8" required></label>
+    <button class="btn solid" type="submit">Guardar contraseña</button>
+    <p class="msg" id="r-msg" role="status"></p>
+  </form>
+</section>
+
+<!-- ===== Sin configurar ===== -->
+<section class="login" id="v-config" hidden>
+  <div class="login-card">
+    <img src="img/logo.png" alt="Clari Color" width="120" height="122">
+    <h1>Falta conectar la base</h1>
+    <p class="muted">Completá la dirección y la clave de Supabase en <code>js/config.js</code> para usar el panel.</p>
+  </div>
+</section>
+
+<!-- ===== Panel ===== -->
+<div class="app" id="v-panel" hidden>
+  <header class="top">
+    <a class="top-brand" href="index.html" target="_blank" rel="noopener"><img src="img/logo.png" alt="" width="44" height="45"><span>Panel</span></a>
+    <div class="top-actions">
+      <a class="btn small" href="index.html" target="_blank" rel="noopener">Ver la web ↗</a>
+      <button class="btn small ghost" type="button" id="b-salir">Salir</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Secciones del panel"></nav>
+
+  <main class="main" id="main" tabindex="-1"></main>
+
+  <div class="savebar" id="savebar" data-estado="limpio">
+    <span class="save-state" id="save-state" role="status">Todo guardado</span>
+    <div class="save-actions">
+      <button class="btn small ghost" type="button" id="b-descartar">Descartar</button>
+      <button class="btn solid" type="button" id="b-guardar">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- confirmación propia (sin alert/confirm del navegador) -->
+<dialog id="dlg" class="dlg">
+  <p id="dlg-t"></p>
+  <div class="dlg-actions">
+    <button class="btn small ghost" type="button" value="no" id="dlg-no">Cancelar</button>
+    <button class="btn small danger" type="button" value="si" id="dlg-si">Sí, borrar</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

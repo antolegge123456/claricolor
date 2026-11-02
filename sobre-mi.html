@@ -22,7 +22,7 @@
         <li><a href="contacto.html">Contacto</a></li>
       </ul>
     </nav>
-    <a class="wa-top" href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
+    <a class="wa-top" data-wa href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
   </div>
 </header>
 <nav class="tabbar" aria-label="Secciones">
@@ -35,9 +35,9 @@
 <main>
 <section class="page-head">
   <div class="wrap">
-    <p class="label">Hola, soy Clari</p>
+    <p class="label" data-c="sobre.etiqueta">Hola, soy Clari</p>
     <h1>Sobre mí</h1>
-    <p>Estilista y coach ontológica. Acompaño transformaciones por dentro y por fuera.</p>
+    <p data-c="sobre.bajada">Estilista y coach ontológica. Acompaño transformaciones por dentro y por fuera.</p>
   </div>
 </section>
 
@@ -46,12 +46,12 @@
 <section class="sec">
   <div class="wrap">
     <div class="about">
-      <div class="portrait reveal"><span>Reemplazar por foto de Clari</span></div>
+      <div class="portrait reveal" data-foto="sobre.foto"><span>Reemplazar por foto de Clari</span></div>
       <div class="reveal">
-        <p class="big">Siempre creí que el cabello es mucho más que pelo: es memoria, identidad y reflejo de lo que llevamos dentro.</p>
-        <p>Soy estilista y coach ontológica. Por eso uní la peluquería con el coaching y el oráculo, y así nació este espacio donde trabajamos por dentro y por fuera.</p>
-        <p>Cada clienta es única. Te escucho, te aconsejo y creamos juntas el resultado. Cada turno es una pausa, un momento para encontrarte.</p>
-        <div class="pillars">
+        <p class="big" data-c="sobre.destacado">Siempre creí que el cabello es mucho más que pelo: es memoria, identidad y reflejo de lo que llevamos dentro.</p>
+        <p data-c="sobre.parrafo1">Soy estilista y coach ontológica. Por eso uní la peluquería con el coaching y el oráculo, y así nació este espacio donde trabajamos por dentro y por fuera.</p>
+        <p data-c="sobre.parrafo2">Cada clienta es única. Te escucho, te aconsejo y creamos juntas el resultado. Cada turno es una pausa, un momento para encontrarte.</p>
+        <div class="pillars" data-list="servicios">
           <div><h3>Color</h3><p>Balayage, mechas, rubios y coloración completa.</p></div>
           <div><h3>Corte</h3><p>Cortes y peinados según tu rostro y tu rutina.</p></div>
           <div><h3>Coaching</h3><p>Sesiones de coaching ontológico y oráculo.</p></div>
@@ -65,8 +65,8 @@
 
 <section class="sec">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>Reseñas</h2><span class="label">Lo que dicen mis clientas</span></div>
-    <div class="reviews reveal">
+    <div class="sec-head reveal"><h2 data-c="sobre.titulo_resenas">Reseñas</h2><span class="label" data-c="sobre.etiqueta_resenas">Lo que dicen mis clientas</span></div>
+    <div class="reviews reveal" data-list="resenas">
       <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>Excelente colorista. Voy hace 10 años y cada día se supera. Te escucha, te interpreta y te cuida el cabello.</blockquote><figcaption><b>Romina Souse</b> · Google</figcaption></figure>
       <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>La mejor colorista por lejos. Entiende a la perfección lo que querés y te asesora con total honestidad.</blockquote><figcaption><b>Donatella Brizzola</b> · Google</figcaption></figure>
       <figure><span class="stars" aria-label="5 de 5">★★★★★</span><blockquote>Me encantó conocer a Clari, y el color final de mi pelito habla por sí solo.</blockquote><figcaption><b>Lisseth Toapanta</b> · Google</figcaption></figure>
@@ -77,14 +77,15 @@
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>¿Lista para tu cambio?</h2>
-    <a class="btn" href="contacto.html">Reservar turno</a>
+    <h2 data-c="cta.titulo">¿Lista para tu cambio?</h2>
+    <a class="btn" href="contacto.html" data-c="cta.boton">Reservar turno</a>
   </div>
 </section>
 </main>
 
 <footer><div class="wrap"><img src="img/logo.png" alt="Clari Color" width="320" height="325"><span>© 2026 Clari Color · Quilmes</span></div></footer>
 
+<script src="js/config.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

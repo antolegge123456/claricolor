@@ -1,0 +1,25 @@
+PANEL DE CLARI COLOR
+====================
+
+Dónde entrar:  tu-dominio/admin.html   (por ejemplo claricolor.com.ar/admin.html)
+
+Qué se puede cambiar
+- Inicio, Sobre mí, Servicios, Reseñas, Trabajos y Contacto.
+- Cada campo tiene un límite de letras para que el diseño no se rompa.
+- Las columnas de servicios y reseñas se acomodan solas según cuántas haya.
+- Las fotos se achican solas antes de subirse, así la web carga rápido.
+- Nada se publica hasta tocar "Guardar cambios". Con "Descartar" se vuelve atrás.
+
+Para dar acceso a alguien (una sola vez, desde supabase.com)
+1. Authentication > Users > Add user > Create new user: mail + contraseña, tildar "Auto confirm user".
+2. Table Editor > admins > Insert row: el mismo mail.
+   Solo los mails que estén en "admins" pueden editar.
+
+Recomendado
+- Authentication > Sign In / Providers: apagar "Allow new users to sign up".
+- Authentication > URL Configuration: poner el dominio de la web en Site URL
+  (para que funcione "Me olvidé la contraseña").
+
+Archivos
+- js/config.js   -> conexión con Supabase (la clave es pública, solo permite leer)
+- supabase/schema.sql -> estructura de la base, por si hay que recrearla

@@ -22,7 +22,7 @@
         <li><a href="contacto.html">Contacto</a></li>
       </ul>
     </nav>
-    <a class="wa-top" href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
+    <a class="wa-top" data-wa href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
   </div>
 </header>
 <nav class="tabbar" aria-label="Secciones">
@@ -35,9 +35,9 @@
 <main>
 <section class="page-head">
   <div class="wrap">
-    <p class="label">Mi trabajo habla por mí</p>
+    <p class="label" data-c="trabajos.etiqueta">Mi trabajo habla por mí</p>
     <h1>Trabajos</h1>
-    <p>Una selección de transformaciones reales: color, cortes, peinados y cambios completos.</p>
+    <p data-c="trabajos.bajada">Una selección de transformaciones reales: color, cortes, peinados y cambios completos.</p>
   </div>
 </section>
 
@@ -53,7 +53,7 @@
       <button type="button" data-f="trans" aria-pressed="false">Transformaciones</button>
     </div>
     <div class="grid" id="grid"></div>
-    <p class="note">Las imágenes son de muestra. Se reemplazan por las fotos reales de los trabajos de Clari.</p>
+    <p class="note" id="demo-note" hidden>Las imágenes son de muestra. Se reemplazan por las fotos reales de los trabajos de Clari.</p>
   </div>
 </section>
 
@@ -64,14 +64,15 @@
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>¿Lista para tu cambio?</h2>
-    <a class="btn" href="contacto.html">Reservar turno</a>
+    <h2 data-c="cta.titulo">¿Lista para tu cambio?</h2>
+    <a class="btn" href="contacto.html" data-c="cta.boton">Reservar turno</a>
   </div>
 </section>
 </main>
 
 <footer><div class="wrap"><img src="img/logo.png" alt="Clari Color" width="320" height="325"><span>© 2026 Clari Color · Quilmes</span></div></footer>
 
+<script src="js/config.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

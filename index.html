@@ -22,7 +22,7 @@
         <li><a href="contacto.html">Contacto</a></li>
       </ul>
     </nav>
-    <a class="wa-top" href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
+    <a class="wa-top" data-wa href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
   </div>
 </header>
 <nav class="tabbar" aria-label="Secciones">
@@ -36,13 +36,13 @@
 <section class="hero">
   <div class="wrap">
     <div>
-      <p class="label">Estilista &amp; coach ontológica · Quilmes</p>
+      <p class="label" data-c="inicio.etiqueta">Estilista &amp; coach ontológica · Quilmes</p>
       <h1>Clari<span>Color</span></h1>
-      <p class="lede">Transformar tu imagen también puede transformar cómo te ves.</p>
-      <p class="sub">Un espacio donde la peluquería, el coaching y el oráculo se unen para acompañarte a verte y sentirte bien, por dentro y por fuera.</p>
+      <p class="lede" data-c="inicio.frase">Transformar tu imagen también puede transformar cómo te ves.</p>
+      <p class="sub" data-c="inicio.texto">Un espacio donde la peluquería, el coaching y el oráculo se unen para acompañarte a verte y sentirte bien, por dentro y por fuera.</p>
       <div class="actions">
-        <a class="btn solid" href="trabajos.html">Conocé mi trabajo</a>
-        <a class="btn" href="contacto.html">Reservar turno</a>
+        <a class="btn solid" href="trabajos.html" data-c="inicio.boton1">Conocé mi trabajo</a>
+        <a class="btn" href="contacto.html" data-c="inicio.boton2">Reservar turno</a>
       </div>
     </div>
     <div class="fan">
@@ -58,8 +58,8 @@
 
 <section class="sec">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>Lo que hago</h2><a class="label" href="sobre-mi.html">Conocé a Clari →</a></div>
-    <div class="pillars reveal" style="margin-top:0">
+    <div class="sec-head reveal"><h2 data-c="inicio.titulo_servicios">Lo que hago</h2><a class="label" href="sobre-mi.html">Conocé a Clari →</a></div>
+    <div class="pillars reveal" style="margin-top:0" data-list="servicios">
       <div><h3>Color</h3><p>Balayage, mechas, rubios y coloración completa.</p></div>
       <div><h3>Corte</h3><p>Cortes y peinados según tu rostro y tu rutina.</p></div>
       <div><h3>Coaching</h3><p>Sesiones de coaching ontológico y oráculo.</p></div>
@@ -71,7 +71,7 @@
 
 <section class="sec">
   <div class="wrap">
-    <div class="sec-head reveal"><h2>Últimos trabajos</h2><a class="label" href="trabajos.html">Ver todos →</a></div>
+    <div class="sec-head reveal"><h2 data-c="inicio.titulo_trabajos">Últimos trabajos</h2><a class="label" href="trabajos.html">Ver todos →</a></div>
     <div class="teaser reveal" id="teaser"></div>
   </div>
 </section>
@@ -80,7 +80,7 @@
 
 <section class="sec">
   <div class="wrap">
-    <figure class="quote reveal">
+    <figure class="quote reveal" data-quote>
       <span class="stars" aria-label="5 de 5">★★★★★</span>
       <blockquote>Excelente colorista. Voy hace 10 años y cada día se supera. Te escucha, te interpreta y te cuida el cabello.</blockquote>
       <figcaption>Romina Souse · reseña en Google · <a href="sobre-mi.html">ver más reseñas</a></figcaption>
@@ -90,14 +90,15 @@
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>¿Lista para tu cambio?</h2>
-    <a class="btn" href="contacto.html">Reservar turno</a>
+    <h2 data-c="cta.titulo">¿Lista para tu cambio?</h2>
+    <a class="btn" href="contacto.html" data-c="cta.boton">Reservar turno</a>
   </div>
 </section>
 </main>
 
 <footer><div class="wrap"><img src="img/logo.png" alt="Clari Color" width="320" height="325"><span>© 2026 Clari Color · Quilmes</span></div></footer>
 
+<script src="js/config.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

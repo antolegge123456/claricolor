@@ -22,7 +22,7 @@
         <li><a href="contacto.html" class="on" aria-current="page">Contacto</a></li>
       </ul>
     </nav>
-    <a class="wa-top" href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
+    <a class="wa-top" data-wa href="https://wa.me/5491123456789" target="_blank" rel="noopener">Turnos</a>
   </div>
 </header>
 <nav class="tabbar" aria-label="Secciones">
@@ -35,9 +35,9 @@
 <main>
 <section class="page-head">
   <div class="wrap">
-    <p class="label">Turnos por WhatsApp</p>
+    <p class="label" data-c="contacto.etiqueta">Turnos por WhatsApp</p>
     <h1>Contacto</h1>
-    <p>¿Querés conocer más? Escribime y te respondo en menos de 24 horas hábiles.</p>
+    <p data-c="contacto.bajada">¿Querés conocer más? Escribime y te respondo en menos de 24 horas hábiles.</p>
   </div>
 </section>
 
@@ -47,17 +47,17 @@
   <div class="wrap">
     <div class="contact">
       <div class="reveal">
-        <div class="row"><span class="label">WhatsApp</span><a href="https://wa.me/5491123456789" target="_blank" rel="noopener">+54 9 11 2345-6789</a></div>
-        <div class="row"><span class="label">Instagram</span><a href="https://www.instagram.com/claricolor.ok/" target="_blank" rel="noopener">@claricolor.ok</a></div>
-        <div class="row"><span class="label">Email</span><span>hola@claricolor.com.ar</span></div>
-        <div class="row"><span class="label">Ubicación</span><span>Quilmes, Buenos Aires</span></div>
-        <div class="row"><span class="label">Horarios</span><span>Lunes a sábado · 10 a 19 h</span></div>
+        <div class="row"><span class="label">WhatsApp</span><a data-wa href="https://wa.me/5491123456789" target="_blank" rel="noopener" data-c="contacto.whatsapp_visible">+54 9 11 2345-6789</a></div>
+        <div class="row"><span class="label">Instagram</span><a data-ig href="https://www.instagram.com/claricolor.ok/" target="_blank" rel="noopener">@claricolor.ok</a></div>
+        <div class="row"><span class="label">Email</span><span data-c="contacto.email">hola@claricolor.com.ar</span></div>
+        <div class="row"><span class="label">Ubicación</span><span data-c="contacto.ubicacion">Quilmes, Buenos Aires</span></div>
+        <div class="row"><span class="label">Horarios</span><span data-c="contacto.horarios">Lunes a sábado · 10 a 19 h</span></div>
       </div>
       <div class="card reveal">
         <form id="f">
           <label for="nombre">Tu nombre<input id="nombre" required autocomplete="name"></label>
           <label for="servicio">¿Qué servicio te interesa?
-            <select id="servicio">
+            <select id="servicio" data-list="opciones">
               <option>Corte de pelo</option><option>Coloración / balayage</option><option>Tratamiento capilar</option><option>Peinado / evento</option><option>Transformación integral</option><option>Sesión de coaching</option><option>Oráculo</option><option>Otro</option>
             </select>
           </label>
@@ -73,6 +73,7 @@
 
 <footer><div class="wrap"><img src="img/logo.png" alt="Clari Color" width="320" height="325"><span>© 2026 Clari Color · Quilmes</span></div></footer>
 
+<script src="js/config.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
